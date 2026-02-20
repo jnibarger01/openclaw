@@ -89,10 +89,14 @@ function createSpawnOptions(cmd, args, envOverride) {
   };
 }
 
+function shellQuoteCmd(cmd) {
+  return shouldUseShellForCommand(cmd) && cmd.includes(" ") ? `"${cmd}"` : cmd;
+}
+
 function run(cmd, args) {
   let child;
   try {
-    child = spawn(cmd, args, createSpawnOptions(cmd, args));
+    child = spawn(shellQuoteCmd(cmd), args, createSpawnOptions(cmd, args));
   } catch (err) {
     console.error(`Failed to launch ${cmd}:`, err);
     process.exit(1);
@@ -113,7 +117,7 @@ function run(cmd, args) {
 function runSync(cmd, args, envOverride) {
   let result;
   try {
-    result = spawnSync(cmd, args, createSpawnOptions(cmd, args, envOverride));
+    result = spawnSync(shellQuoteCmd(cmd), args, createSpawnOptions(cmd, args, envOverride));
   } catch (err) {
     console.error(`Failed to launch ${cmd}:`, err);
     process.exit(1);
