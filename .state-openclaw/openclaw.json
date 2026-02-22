@@ -1,0 +1,128 @@
+{
+    "meta":  {
+                 "lastTouchedVersion":  "2026.2.19-2",
+                 "lastTouchedAt":  "2026-02-21T13:58:04.355Z"
+             },
+    "wizard":  {
+                   "lastRunAt":  "2026-02-20T06:37:02.227Z",
+                   "lastRunVersion":  "2026.2.19-2",
+                   "lastRunCommand":  "onboard",
+                   "lastRunMode":  "local"
+               },
+    "auth":  {
+                 "profiles":  {
+                                  "openai-codex:default":  {
+                                                               "provider":  "openai-codex",
+                                                               "mode":  "oauth"
+                                                           }
+                              }
+             },
+    "agents":  {
+                   "defaults":  {
+                                    "model":  {
+                                                  "primary":  "openai-codex/gpt-5.2-codex"
+                                              },
+                                    "models":  {
+                                                   "openai-codex/gpt-5.2-codex":  {
+
+                                                                                  }
+                                               },
+                                    "workspace":  "C:\\Users\\jace nibarger\\.openclaw\\workspace",
+                                    "compaction":  {
+                                                       "mode":  "safeguard"
+                                                   }
+                                }
+               },
+    "commands":  {
+                     "native":  "auto",
+                     "nativeSkills":  "auto",
+                     "restart":  true
+                 },
+    "hooks":  {
+                  "internal":  {
+                                   "enabled":  true,
+                                   "entries":  {
+                                                   "boot-md":  {
+                                                                   "enabled":  true
+                                                               },
+                                                   "bootstrap-extra-files":  {
+                                                                                 "enabled":  true
+                                                                             },
+                                                   "command-logger":  {
+                                                                          "enabled":  true
+                                                                      },
+                                                   "session-memory":  {
+                                                                          "enabled":  true
+                                                                      }
+                                               }
+                               }
+              },
+    "channels":  {
+                     "whatsapp":  {
+                                      "dmPolicy":  "allowlist",
+                                      "selfChatMode":  true,
+                                      "allowFrom":  [
+                                                        "+13163032715"
+                                                    ],
+                                      "groupPolicy":  "allowlist",
+                                      "debounceMs":  0,
+                                      "mediaMaxMb":  50,
+                                      "actions":  {
+                                                      "reactions":  true,
+                                                      "sendMessage":  true,
+                                                      "polls":  true
+                                                  },
+                                      "enabled":  false
+                                  },
+                     "telegram":  {
+                                      "enabled":  true,
+                                      "dmPolicy":  "pairing",
+                                      "botToken":  "8419247939:AAEU97Yt1aWYSJuCCVlMOvz81t-_IhTeZHY",
+                                      "groupPolicy":  "allowlist",
+                                      "streamMode":  "partial",
+                                      "actions":  {
+                                                      "reactions":  true,
+                                                      "sendMessage":  true,
+                                                      "deleteMessage":  true
+                                                  }
+                                  },
+                     "imessage":  {
+                                      "enabled":  false,
+                                      "cliPath":  "imsg",
+                                      "dmPolicy":  "pairing",
+                                      "groupPolicy":  "allowlist",
+                                      "accounts":  {
+                                                       "custom-1":  {
+                                                                        "dmPolicy":  "pairing",
+                                                                        "groupPolicy":  "allowlist"
+                                                                    }
+                                                   }
+                                  }
+                 },
+    "gateway":  {
+                    "port":  18790,
+                    "mode":  "local",
+                    "bind":  "loopback",
+                    "auth":  {
+                                 "mode":  "token",
+                                 "token":  "e10112506ae70e43daf62af75ecc4433618f1355b9d847ef"
+                             },
+                    "tailscale":  {
+                                      "mode":  "off",
+                                      "resetOnExit":  false
+                                  }
+                },
+    "plugins":  {
+                    "entries":  {
+                                    "telegram":  {
+                                                     "enabled":  true
+                                                 },
+                                    "whatsapp":  {
+                                                     "enabled":  false
+                                                 },
+                                    "imessage":  {
+                                                     "enabled":  false
+                                                 }
+                                }
+                }
+}
