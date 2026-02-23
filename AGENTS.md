@@ -1,7 +1,49 @@
-# Repository Guidelines
+# AGENTS.md
+
+This file provides guidance to WARP (warp.dev) when working with code in this repository.
 
 - Repo: https://github.com/openclaw/openclaw
 - GitHub issues/comments/PR comments: use literal multiline strings or `-F - <<'EOF'` (or $'...') for real newlines; never embed "\\n".
+
+## High-Level Architecture
+
+OpenClaw is a personal AI assistant that runs locally. The architecture is **Gateway-centric**:
+
+```
+Channels (WhatsApp, Telegram, Slack, Discord, Signal, iMessage, …)
+        │
+        ▼
+┌──────────────────────────┐
+│       Gateway            │  ← WS control plane (ws://127.0.0.1:18789)
+│  (Express + WebSocket)   │
+└───────┬──────────────────┘
+        │
+        ├─ Pi agent runtime (RPC mode, tool/block streaming)
+        ├─ CLI (Commander-based: src/cli/program.ts → src/commands/*)
+        ├─ Control UI (Lit web components, served from Gateway)
+        ├─ Plugin system (extensions/* loaded via plugin-sdk)
+        └─ Node connections (macOS/iOS/Android companion apps)
+```
+
+- **Gateway** (`src/gateway/`): The central server. Manages sessions, channel routing, config, cron, hooks, auth, and the WS protocol. Entry: `src/gateway/server.ts` → `server.impl.ts`.
+- **Channels** (`src/telegram/`, `src/discord/`, `src/slack/`, `src/signal/`, `src/imessage/`, `src/whatsapp/`, `src/channels/`): Built-in messaging integrations. Each connects to the Gateway.
+- **Extensions** (`extensions/*`): Workspace packages that add channels (msteams, matrix, zalo, etc.) or capabilities (voice-call, memory, lobster). Loaded as plugins via `src/plugin-sdk/`.
+- **Pi Agent** (`src/agents/`): AI runtime using `@mariozechner/pi-agent-core`. Handles model calls, tool invocation, session management, and streaming.
+- **CLI** (`src/cli/`, `src/commands/`): Commander-based CLI. Entry point: `src/entry.ts` → `src/cli/run-main.ts` → `src/cli/program.ts`. Dependency injection via `createDefaultDeps` (`src/cli/deps.ts`).
+- **Control UI** (`ui/`): Lit-based web UI served by the Gateway. Uses **legacy decorators** (`@state()`, `@property()`) — see tsconfig `experimentalDecorators: true`, `useDefineForClassFields: false`. Do not use standard `accessor` decorators.
+- **Apps** (`apps/`): macOS menu bar app (SwiftUI), iOS app (SwiftUI), Android app (Kotlin), Mission Control web app.
+- **Config** (`src/config/`): YAML-based config with session store, loaded via `loadConfig`.
+- **Infra** (`src/infra/`): Shared utilities — env handling, port management, binaries, state migrations, update checks.
+- **Media** (`src/media/`, `src/media-understanding/`): Image/audio/video pipeline, transcription, size caps.
+
+### Workspace Layout (pnpm)
+
+The monorepo has 5 workspace groups defined in `pnpm-workspace.yaml`:
+- `.` (root) — core CLI + Gateway
+- `apps/mission-control` — Mission Control web app
+- `ui` — Control UI (Lit)
+- `packages/*` — internal packages (clawdbot, moltbot)
+- `extensions/*` — channel/capability plugins
 
 ## Project Structure & Module Organization
 
@@ -65,6 +107,11 @@
 - Format check: `pnpm format` (oxfmt --check)
 - Format fix: `pnpm format:fix` (oxfmt --write)
 - Tests: `pnpm test` (vitest); coverage: `pnpm test:coverage`
+- Run a single test file: `vitest run src/path/to/file.test.ts` (or `pnpm vitest run <path>`)
+- Run a single test by name: `vitest run -t "test name pattern" src/path/to/file.test.ts`
+- Watch mode: `pnpm test:watch`
+- E2E tests: `pnpm test:e2e` (uses `vitest.e2e.config.ts`, files matching `*.e2e.test.ts`)
+- UI tests: `pnpm test:ui` (runs in `ui/` workspace)
 
 ## Coding Style & Naming Conventions
 

@@ -1,5 +1,6 @@
 packages:
   - .
+  - apps/mission-control
   - ui
   - packages/*
   - extensions/*
