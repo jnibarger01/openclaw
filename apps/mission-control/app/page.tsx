@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { MissionControlDashboard } from "@/components/mission-control-dashboard";
+import { OrchestratorForm } from "@/components/orchestrator-form";
 import { PinGate } from "@/components/pin-gate";
 import { MISSION_SESSION_KEY } from "@/lib/auth";
 
@@ -38,5 +39,12 @@ export default function HomePage() {
     return <PinGate onAuthenticated={handleAuthenticated} />;
   }
 
-  return <MissionControlDashboard onSignOut={handleSignOut} />;
+  return (
+    <>
+      <section className="mx-auto w-full max-w-[1400px] px-3 pb-0 pt-3 sm:px-4 lg:px-6">
+        <OrchestratorForm />
+      </section>
+      <MissionControlDashboard onSignOut={handleSignOut} />
+    </>
+  );
 }
